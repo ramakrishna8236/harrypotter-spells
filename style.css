@@ -1,0 +1,611 @@
+/* ==========================================================================
+   HARRY POTTER – INTERACTIVE SPELL-CASTING GAME
+   Aesthetic: Hogwarts Medieval Gothic, Midnight Blue, Obsidian & Gilded Gold
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=IM+Fell+English:ital@0;1&family=MedievalSharp&display=swap');
+
+:root {
+    --gold-primary: #d4af37;
+    --gold-light: #fbe282;
+    --gold-dark: #8c6f1d;
+    --bg-dark: #080b12;
+    --panel-bg: rgba(12, 17, 30, 0.88);
+    --panel-border: rgba(212, 175, 55, 0.4);
+    --panel-glow: rgba(212, 175, 55, 0.2);
+    --gryffindor-red: #8b0e14;
+    --text-parchment: #ece5d3;
+    --text-muted: #a69f8c;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'IM Fell English', Georgia, serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    font-family: var(--font-body);
+    color: var(--text-parchment);
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 24px;
+}
+
+/* Enable pointer events on interactive UI components */
+.interactive {
+    pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   TOP HEADER HUD
+   -------------------------------------------------------------------------- */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(8, 12, 22, 0.92) 0%, rgba(8, 12, 22, 0.4) 80%, transparent 100%);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--panel-border);
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.crest-icon {
+    font-size: 32px;
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.6));
+    animation: pulseCrest 3s infinite ease-in-out;
+}
+
+@keyframes pulseCrest {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5)); }
+    50% { transform: scale(1.06); filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.85)); }
+}
+
+.title-group h1 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    background: linear-gradient(135deg, #fff3c4 0%, var(--gold-light) 40%, var(--gold-primary) 70%, var(--gold-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 14px rgba(212, 175, 55, 0.3);
+}
+
+.title-group p {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.top-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-magical {
+    background: linear-gradient(180deg, rgba(30, 38, 60, 0.9) 0%, rgba(14, 18, 32, 0.9) 100%);
+    border: 1px solid var(--panel-border);
+    color: var(--gold-light);
+    font-family: var(--font-heading);
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-magical:hover {
+    background: linear-gradient(180deg, rgba(45, 58, 92, 0.95) 0%, rgba(22, 28, 50, 0.95) 100%);
+    border-color: var(--gold-light);
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.45);
+    transform: translateY(-1px);
+}
+
+.btn-magical:active {
+    transform: translateY(1px);
+}
+
+.btn-reset {
+    background: linear-gradient(180deg, rgba(80, 20, 24, 0.85) 0%, rgba(45, 12, 16, 0.9) 100%);
+    border-color: rgba(220, 60, 60, 0.5);
+    color: #ffcccc;
+}
+
+.btn-reset:hover {
+    background: linear-gradient(180deg, rgba(110, 28, 34, 0.95) 0%, rgba(65, 16, 22, 0.95) 100%);
+    border-color: #ff6666;
+    box-shadow: 0 0 16px rgba(220, 60, 60, 0.5);
+}
+
+/* Camera presets select */
+.camera-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.camera-select {
+    background: linear-gradient(180deg, rgba(25, 32, 52, 0.9) 0%, rgba(12, 16, 28, 0.9) 100%);
+    border: 1px solid var(--panel-border);
+    color: var(--gold-light);
+    font-family: var(--font-heading);
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.camera-select:hover {
+    border-color: var(--gold-light);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+}
+
+/* Volume Control */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14, 18, 30, 0.7);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.vol-slider {
+    width: 70px;
+    accent-color: var(--gold-primary);
+    cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   STATUS & ANNOUNCEMENT BANNER
+   -------------------------------------------------------------------------- */
+.status-banner-container {
+    align-self: center;
+    margin-top: 14px;
+    max-width: 720px;
+    width: 90%;
+    transition: all 0.3s ease;
+}
+
+.status-card {
+    background: linear-gradient(135deg, rgba(14, 18, 32, 0.92) 0%, rgba(20, 26, 44, 0.95) 50%, rgba(10, 14, 26, 0.92) 100%);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 14px 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), 0 0 20px var(--panel-glow);
+    text-align: center;
+    position: relative;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+
+.status-card::before, .status-card::after {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold-light);
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.status-card::before { left: 16px; }
+.status-card::after { right: 16px; }
+
+.status-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.status-spell-name {
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.status-badge {
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid var(--gold-primary);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-description {
+    font-size: 14.5px;
+    line-height: 1.4;
+    color: var(--text-parchment);
+    font-style: italic;
+    letter-spacing: 0.3px;
+}
+
+/* --------------------------------------------------------------------------
+   BOTTOM SPELL SELECTION PANEL
+   -------------------------------------------------------------------------- */
+.bottom-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.spell-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.spell-panel-title {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+}
+
+.keyboard-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
+}
+
+.keyboard-hint kbd {
+    background: rgba(25, 32, 54, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--gold-light);
+}
+
+/* Spells Grid */
+.spells-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+/* Spell Card */
+.spell-card {
+    background: linear-gradient(180deg, rgba(16, 22, 38, 0.92) 0%, rgba(10, 14, 26, 0.95) 100%);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+}
+
+.spell-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--spell-color, var(--gold-primary));
+    opacity: 0.8;
+    transition: height 0.25s ease;
+}
+
+.spell-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--spell-color, var(--gold-light));
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 20px var(--spell-glow, rgba(212, 175, 55, 0.3));
+}
+
+.spell-card:hover::before {
+    height: 5px;
+}
+
+.spell-card:active {
+    transform: translateY(-2px);
+}
+
+/* Specific Spell Themes */
+.spell-card[data-spell="expelliarmus"] {
+    --spell-color: #e74c3c;
+    --spell-glow: rgba(231, 76, 60, 0.45);
+}
+.spell-card[data-spell="wingardium"] {
+    --spell-color: #00d2d3;
+    --spell-glow: rgba(0, 210, 211, 0.45);
+}
+.spell-card[data-spell="lumos"] {
+    --spell-color: #f1c40f;
+    --spell-glow: rgba(241, 196, 15, 0.45);
+}
+.spell-card[data-spell="nox"] {
+    --spell-color: #9b59b6;
+    --spell-glow: rgba(155, 89, 182, 0.45);
+}
+.spell-card[data-spell="alohomora"] {
+    --spell-color: #e67e22;
+    --spell-glow: rgba(230, 126, 34, 0.45);
+}
+.spell-card[data-spell="accio"] {
+    --spell-color: #3498db;
+    --spell-glow: rgba(52, 152, 219, 0.45);
+}
+
+.spell-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.spell-icon {
+    font-size: 24px;
+    filter: drop-shadow(0 0 6px var(--spell-color));
+}
+
+.hotkey-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 2px 6px;
+    color: var(--gold-light);
+}
+
+.spell-incantation {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 1.2px;
+    margin-bottom: 2px;
+}
+
+.spell-title {
+    font-size: 11.5px;
+    color: var(--spell-color);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.spell-desc {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--text-muted);
+    font-style: normal;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.spell-gesture-tag {
+    align-self: flex-start;
+    font-family: var(--font-heading);
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    padding: 2px 7px;
+    border-radius: 3px;
+}
+
+/* Active Casting Animation on Card */
+.spell-card.active-casting {
+    animation: spellCastPulse 0.8s ease-in-out infinite alternate;
+    border-color: var(--spell-color);
+}
+
+@keyframes spellCastPulse {
+    from {
+        box-shadow: 0 0 10px var(--spell-glow);
+    }
+    to {
+        box-shadow: 0 0 25px var(--spell-glow), inset 0 0 15px var(--spell-glow);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   WAND GESTURE & HELP MODAL
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 6, 12, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-box {
+    background: linear-gradient(135deg, rgba(16, 22, 38, 0.96) 0%, rgba(10, 14, 26, 0.98) 100%);
+    border: 2px solid var(--panel-border);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 680px;
+    padding: 28px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.25);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 12px;
+}
+
+.modal-header h2 {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.btn-close:hover {
+    color: var(--gold-light);
+}
+
+.gesture-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.gesture-item {
+    background: rgba(22, 28, 48, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+}
+
+.gesture-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.gesture-item h4 {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+}
+
+.gesture-item p {
+    font-size: 11.5px;
+    color: var(--text-muted);
+}
+
+.help-footer-tips {
+    background: rgba(212, 175, 55, 0.08);
+    border-left: 3px solid var(--gold-primary);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-parchment);
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+    .spells-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .title-group h1 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .spells-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .status-description {
+        font-size: 13px;
+    }
+    .gesture-grid {
+        grid-template-columns: 1fr;
+    }
+}

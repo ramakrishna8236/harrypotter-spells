@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter – Interactive Spell-Casting Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+    <!-- 3D WebGL Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay Layer -->
+    <div id="ui-overlay">
+        <!-- Top Header Navigation & Controls -->
+        <header class="top-header interactive">
+            <div class="brand-section">
+                <div class="crest-icon">⚡</div>
+                <div class="title-group">
+                    <h1>HARRY POTTER</h1>
+                    <p>Spell-Casting Chamber • Hogwarts Castle</p>
+                </div>
+            </div>
+
+            <div class="top-controls">
+                <!-- Camera Presets -->
+                <div class="camera-select-wrapper">
+                    <select id="camera-select" class="camera-select">
+                        <option value="cinematic">🎥 Cinematic View</option>
+                        <option value="harry">🧙‍♂️ Harry Focus</option>
+                        <option value="targets">🎯 Target Dummy View</option>
+                        <option value="overview">🏰 Grand Hall Overview</option>
+                    </select>
+                </div>
+
+                <!-- Wand Gesture Guide Modal Trigger -->
+                <button id="btn-gesture-guide" class="btn-magical">
+                    📜 Spell Lore & Gestures
+                </button>
+
+                <!-- Audio Controls -->
+                <div class="volume-control">
+                    <button id="btn-mute" class="btn-magical" style="padding: 6px 10px;">
+                        🔊 Sound
+                    </button>
+                    <input type="range" id="vol-slider" class="vol-slider" min="0" max="1" step="0.05" value="0.7" title="Master Volume">
+                </div>
+
+                <!-- Reset Chamber Button -->
+                <button id="btn-reset" class="btn-magical btn-reset">
+                    🔄 Reset Chamber
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Status & Announcement Banner -->
+        <div class="status-banner-container interactive">
+            <div class="status-card">
+                <div class="status-header">
+                    <span class="status-spell-name">Ready to Cast</span>
+                    <span class="status-badge">Chamber Active</span>
+                </div>
+                <p class="status-description">
+                    Select any spell below or press hotkeys <kbd>1</kbd>–<kbd>6</kbd> to command Harry's wand movements and trigger real-time magic.
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Spell Selection Panel -->
+        <footer class="bottom-panel interactive">
+            <div class="spell-panel-header">
+                <span class="spell-panel-title">⚡ Master Spellbook Selection</span>
+                <span class="keyboard-hint">
+                    Hotkeys: <kbd>1</kbd>–<kbd>6</kbd> Cast | <kbd>R</kbd> Reset | <kbd>C</kbd> Camera | <kbd>Space</kbd> Repeat
+                </span>
+            </div>
+
+            <div class="spells-grid">
+                <!-- Spell 1: Expelliarmus -->
+                <div class="spell-card" data-spell="expelliarmus">
+                    <div class="spell-card-top">
+                        <span class="spell-icon">⚔️</span>
+                        <span class="hotkey-badge">1</span>
+                    </div>
+                    <div>
+                        <div class="spell-incantation">Expelliarmus</div>
+                        <div class="spell-title">The Disarming Charm</div>
+                        <p class="spell-desc">Knocks wand or weapon violently from target's grip.</p>
+                    </div>
+                    <span class="spell-gesture-tag">Gesture: Thrust</span>
+                </div>
+
+                <!-- Spell 2: Wingardium Leviosa -->
+                <div class="spell-card" data-spell="wingardium">
+                    <div class="spell-card-top">
+                        <span class="spell-icon">🪶</span>
+                        <span class="hotkey-badge">2</span>
+                    </div>
+                    <div>
+                        <div class="spell-incantation">Wingardium Leviosa</div>
+                        <div class="spell-title">The Levitation Charm</div>
+                        <p class="spell-desc">Swish and flick to lift and hover the heavy cauldron.</p>
+                    </div>
+                    <span class="spell-gesture-tag">Gesture: Swish & Flick</span>
+                </div>
+
+                <!-- Spell 3: Lumos -->
+                <div class="spell-card" data-spell="lumos">
+                    <div class="spell-card-top">
+                        <span class="spell-icon">✨</span>
+                        <span class="hotkey-badge">3</span>
+                    </div>
+                    <div>
+                        <div class="spell-incantation">Lumos</div>
+                        <div class="spell-title">The Wand-Light Charm</div>
+                        <p class="spell-desc">Ignites radiant light beacon at wand tip.</p>
+                    </div>
+                    <span class="spell-gesture-tag">Gesture: Raise Overhead</span>
+                </div>
+
+                <!-- Spell 4: Nox -->
+                <div class="spell-card" data-spell="nox">
+                    <div class="spell-card-top">
+                        <span class="spell-icon">🌑</span>
+                        <span class="hotkey-badge">4</span>
+                    </div>
+                    <div>
+                        <div class="spell-incantation">Nox</div>
+                        <div class="spell-title">The Extinguishing Charm</div>
+                        <p class="spell-desc">Snuffs out wand light, restoring darkness.</p>
+                    </div>
+                    <span class="spell-gesture-tag">Gesture: Snuff Swipe</span>
+                </div>
+
+                <!-- Spell 5: Alohomora -->
+                <div class="spell-card" data-spell="alohomora">
+                    <div class="spell-card-top">
+                        <span class="spell-icon">🗝️</span>
+                        <span class="hotkey-badge">5</span>
+                    </div>
+                    <div>
+                        <div class="spell-incantation">Alohomora</div>
+                        <div class="spell-title">The Unlocking Charm</div>
+                        <p class="spell-desc">Clicks open locked padlock, swinging chest open.</p>
+                    </div>
+                    <span class="spell-gesture-tag">Gesture: Spiral Loop</span>
+                </div>
+
+                <!-- Spell 6: Accio -->
+                <div class="spell-card" data-spell="accio">
+                    <div class="spell-card-top">
+                        <span class="spell-icon">📖</span>
+                        <span class="hotkey-badge">6</span>
+                    </div>
+                    <div>
+                        <div class="spell-incantation">Accio</div>
+                        <div class="spell-title">The Summoning Charm</div>
+                        <p class="spell-desc">Pulls distant spellbook through air into Harry's hand.</p>
+                    </div>
+                    <span class="spell-gesture-tag">Gesture: Yank & Catch</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Wand Gesture Guide & Spell Lore Modal -->
+    <div id="modal-gesture-guide" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>📜 Hogwarts Wand Lore & Gestures</h2>
+                <button id="btn-close-modal" class="btn-close">&times;</button>
+            </div>
+
+            <div class="gesture-grid">
+                <div class="gesture-item">
+                    <div class="gesture-icon">⚡</div>
+                    <h4>Expelliarmus</h4>
+                    <p><strong>Gesture:</strong> Rapid defensive pullback followed by an aggressive forward thrust pointing at the opponent's wand.</p>
+                </div>
+
+                <div class="gesture-item">
+                    <div class="gesture-icon">🪶</div>
+                    <h4>Wingardium Leviosa</h4>
+                    <p><strong>Gesture:</strong> <em>"Swish and flick, remember, swish and flick!"</em> Smooth upward arc with a crisp downward wrist snap.</p>
+                </div>
+
+                <div class="gesture-item">
+                    <div class="gesture-icon">💡</div>
+                    <h4>Lumos</h4>
+                    <p><strong>Gesture:</strong> Upward flourish holding the wand like a lantern to ignite the holly core with celestial light.</p>
+                </div>
+
+                <div class="gesture-item">
+                    <div class="gesture-icon">🌙</div>
+                    <h4>Nox</h4>
+                    <p><strong>Gesture:</strong> Sharp extinguishing cross-body swipe (like a candle snuffer) to extinguish the light.</p>
+                </div>
+
+                <div class="gesture-item">
+                    <div class="gesture-icon">🗝️</div>
+                    <h4>Alohomora</h4>
+                    <p><strong>Gesture:</strong> Smooth clockwise spiral loop aimed at the keyhole to disengage enchanted brass tumblers.</p>
+                </div>
+
+                <div class="gesture-item">
+                    <div class="gesture-icon">📖</div>
+                    <h4>Accio</h4>
+                    <p><strong>Gesture:</strong> Sharp circular lock-on with a backward summoning pull, preparing the free hand to catch the object.</p>
+                </div>
+            </div>
+
+            <div class="help-footer-tips">
+                <p><strong>Wandmaster Tips:</strong> Left-click and drag in the chamber to rotate the 3D camera. Right-click and drag to pan. Scroll wheel to zoom in and out. Press <kbd>1</kbd>–<kbd>6</kbd> on your keyboard to instantly cast spells!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Libraries (100% Offline & Reliable) -->
+    <script src="three.min.js"></script>
+    <script src="OrbitControls.js"></script>
+
+    <!-- Game Engine Scripts -->
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/environment.js"></script>
+    <script src="js/spells.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

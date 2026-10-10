@@ -1,0 +1,19 @@
+{
+  "name": "harry-potter-spell-casting-game",
+  "version": "1.0.0",
+  "description": "Interactive 3D Harry Potter Spell-Casting Game built with Three.js and Web Audio API",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -p 8080 .",
+    "serve": "python -m http.server 8080"
+  },
+  "keywords": [
+    "harry-potter",
+    "threejs",
+    "spells",
+    "webgl",
+    "interactive-game"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
