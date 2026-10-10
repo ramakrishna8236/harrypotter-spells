@@ -76,9 +76,9 @@ All sound effects are 100% procedurally synthesized in real time using the brows
 
 ## 🌐 Play Online
 
-Deploy the repository to Vercel to publish the game as a static website. Vercel can serve `index.html` directly; no build command or output directory is needed.
+Play the deployed game at https://harrypotter-spells.vercel.app/
 
-Connect the GitHub repository at https://vercel.com/new and import `ramakrishna8236/harrypotter-spells`. After the first deployment, Vercel will automatically redeploy every push to `master`. You can still run it locally using the options below.
+The site is hosted on Vercel as a static website. Vercel automatically deploys pushes to the `master` branch. You can still run it locally using the options below.
 
 ---
 
