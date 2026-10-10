@@ -188,7 +188,7 @@ class HarryCharacter {
         this.bones.head = head;
 
         // Head Base
-        const headGeom = new THREE.SphereGeometry(0.19, 20, 20);
+        const headGeom = new THREE.SphereGeometry(0.205, 24, 24);
         headGeom.scale(1.0, 1.15, 1.05);
         const headMesh = new THREE.Mesh(headGeom, skinMat);
         headMesh.castShadow = true;
@@ -197,7 +197,7 @@ class HarryCharacter {
         // Nose
         const noseGeom = new THREE.ConeGeometry(0.032, 0.075, 8);
         const noseMesh = new THREE.Mesh(noseGeom, skinMat);
-        noseMesh.position.set(0, -0.02, 0.19);
+        noseMesh.position.set(0, -0.02, 0.215);
         noseMesh.rotation.x = 1.35;
         head.add(noseMesh);
 
@@ -214,27 +214,27 @@ class HarryCharacter {
         // Vibrant Green Eyes (Harry's signature feature)
         [-1, 1].forEach(side => {
             const eyeGroup = new THREE.Group();
-            eyeGroup.position.set(side * 0.068, 0.035, 0.17);
+            eyeGroup.position.set(side * 0.075, 0.035, 0.19);
 
             // Eyeball (white)
-            const scleraGeom = new THREE.SphereGeometry(0.032, 12, 12);
+            const scleraGeom = new THREE.SphereGeometry(0.039, 16, 16);
             const scleraMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
             const scleraMesh = new THREE.Mesh(scleraGeom, scleraMat);
             scleraGeom.scale(1, 0.9, 0.6);
             eyeGroup.add(scleraMesh);
 
             // Iris (Vibrant Lily-Potter Emerald Green)
-            const irisGeom = new THREE.CircleGeometry(0.019, 14);
+            const irisGeom = new THREE.CircleGeometry(0.022, 16);
             const irisMat = new THREE.MeshBasicMaterial({ color: 0x27ae60 });
             const irisMesh = new THREE.Mesh(irisGeom, irisMat);
-            irisMesh.position.z = 0.02;
+            irisMesh.position.z = 0.024;
             eyeGroup.add(irisMesh);
 
             // Pupil (black)
-            const pupilGeom = new THREE.CircleGeometry(0.009, 12);
+            const pupilGeom = new THREE.CircleGeometry(0.011, 12);
             const pupilMat = new THREE.MeshBasicMaterial({ color: 0x050505 });
             const pupilMesh = new THREE.Mesh(pupilGeom, pupilMat);
-            pupilMesh.position.z = 0.022;
+            pupilMesh.position.z = 0.026;
             eyeGroup.add(pupilMesh);
 
             head.add(eyeGroup);
@@ -242,12 +242,36 @@ class HarryCharacter {
 
         // Eyebrows
         [-1, 1].forEach(side => {
-            const browGeom = new THREE.BoxGeometry(0.065, 0.015, 0.015);
+            const browGeom = new THREE.BoxGeometry(0.07, 0.015, 0.015);
             const browMesh = new THREE.Mesh(browGeom, hairMat);
-            browMesh.position.set(side * 0.068, 0.082, 0.185);
+            browMesh.position.set(side * 0.075, 0.085, 0.207);
             browMesh.rotation.z = -side * 0.12;
             head.add(browMesh);
         });
+
+        // Soft cheek color and a small smile give the face a friendly storybook look.
+        const cheekMat = new THREE.MeshBasicMaterial({
+            color: 0xe9968a,
+            transparent: true,
+            opacity: 0.42,
+            depthWrite: false
+        });
+        [-1, 1].forEach(side => {
+            const cheek = new THREE.Mesh(new THREE.CircleGeometry(0.027, 16), cheekMat);
+            cheek.position.set(side * 0.125, -0.055, 0.163);
+            head.add(cheek);
+        });
+
+        const smileCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-0.035, -0.105, 0.187),
+            new THREE.Vector3(0, -0.116, 0.194),
+            new THREE.Vector3(0.035, -0.105, 0.187)
+        ]);
+        const smile = new THREE.Mesh(
+            new THREE.TubeGeometry(smileCurve, 12, 0.004, 6, false),
+            new THREE.MeshBasicMaterial({ color: 0x793e3b })
+        );
+        head.add(smile);
 
         // Lightning Bolt Scar on right forehead
         this.addLightningScar(head);
@@ -257,6 +281,7 @@ class HarryCharacter {
 
         // Messy Tousled Dark Hair
         this.addMessyHair(head, hairMat);
+        head.scale.setScalar(1.3);
 
         // 4. Arms & Shoulders
         // Left Arm (Catching / Gesturing hand)
@@ -461,10 +486,10 @@ class HarryCharacter {
     addLightningScar(headGroup) {
         // Jagged lightning bolt scar on right forehead
         const points = [
-            new THREE.Vector3(0.065, 0.13, 0.178),
-            new THREE.Vector3(0.082, 0.108, 0.183),
-            new THREE.Vector3(0.072, 0.106, 0.184),
-            new THREE.Vector3(0.088, 0.085, 0.187)
+            new THREE.Vector3(0.065, 0.13, 0.205),
+            new THREE.Vector3(0.082, 0.108, 0.21),
+            new THREE.Vector3(0.072, 0.106, 0.211),
+            new THREE.Vector3(0.088, 0.085, 0.214)
         ];
 
         const scarCurve = new THREE.CatmullRomCurve3(points);
@@ -478,25 +503,25 @@ class HarryCharacter {
 
     addGlasses(headGroup, frameMat, lensMat) {
         const glasses = new THREE.Group();
-        glasses.position.set(0, 0.038, 0.182);
+        glasses.position.set(0, 0.038, 0.208);
 
         [-1, 1].forEach(side => {
             // Round wire eye ring
-            const rimGeom = new THREE.TorusGeometry(0.048, 0.006, 8, 24);
+            const rimGeom = new THREE.TorusGeometry(0.056, 0.006, 8, 24);
             const rimMesh = new THREE.Mesh(rimGeom, frameMat);
-            rimMesh.position.x = side * 0.07;
+            rimMesh.position.x = side * 0.077;
             glasses.add(rimMesh);
 
             // Lens
-            const lensGeom = new THREE.CircleGeometry(0.046, 20);
+            const lensGeom = new THREE.CircleGeometry(0.052, 24);
             const lensMesh = new THREE.Mesh(lensGeom, lensMat);
-            lensMesh.position.x = side * 0.07;
+            lensMesh.position.x = side * 0.077;
             glasses.add(lensMesh);
 
             // Temple wire arms back to ears
             const armGeom = new THREE.CylinderGeometry(0.004, 0.004, 0.19, 6);
             const armMesh = new THREE.Mesh(armGeom, frameMat);
-            armMesh.position.set(side * 0.118, 0, -0.09);
+            armMesh.position.set(side * 0.137, 0, -0.09);
             armMesh.rotation.x = Math.PI / 2;
             glasses.add(armMesh);
         });

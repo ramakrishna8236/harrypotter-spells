@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
     scene.fog = new THREE.FogExp2(0x0a0f1d, 0.025);
 
     const camera = new THREE.PerspectiveCamera(48, width / height, 0.1, 100);
-    camera.position.set(2.8, 2.4, -4.6);
+    camera.position.set(0.65, 2.0, 2.2);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(width, height);
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
     controls.maxPolarAngle = Math.PI / 2 - 0.02; // prevent going below ground
     controls.minDistance = 1.5;
     controls.maxDistance = 22;
-    controls.target.set(0, 1.4, 2.5);
+    controls.target.set(0, 1.75, 0);
 
     // 2. Instantiate Systems
     const particles = new ParticleEngine(scene);
@@ -67,8 +67,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 3. Camera Presets
     const cameraPresets = {
-        cinematic: { pos: new THREE.Vector3(2.8, 2.4, -4.6), target: new THREE.Vector3(0, 1.4, 2.5) },
-        harry: { pos: new THREE.Vector3(0.35, 1.6, -1.8), target: new THREE.Vector3(0, 1.35, 0.2) },
+        cinematic: { pos: new THREE.Vector3(0.65, 2.0, 2.2), target: new THREE.Vector3(0, 1.75, 0) },
+        harry: { pos: new THREE.Vector3(0.25, 1.85, 1.65), target: new THREE.Vector3(0, 1.72, 0) },
         targets: { pos: new THREE.Vector3(0.2, 2.4, 11.5), target: new THREE.Vector3(0, 1.3, 2.0) },
         overview: { pos: new THREE.Vector3(-6.2, 6.5, -5.2), target: new THREE.Vector3(0, 1.8, 4.0) }
     };

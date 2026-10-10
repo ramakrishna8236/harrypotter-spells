@@ -70,9 +70,12 @@ class SpellManager {
 
     castSpell(spellKey) {
         if (this.isCasting) return;
-        this.isCasting = true;
 
         const info = this.spellData[spellKey];
+        if (!info) return;
+
+        this.isCasting = true;
+        window.soundEngine.speakSpell(info.name);
 
         switch (spellKey) {
             case 'expelliarmus':

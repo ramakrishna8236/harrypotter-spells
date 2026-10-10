@@ -50,7 +50,22 @@ class SoundEngine {
         if (this.masterGain && this.ctx) {
             this.masterGain.gain.setTargetAtTime(this.isMuted ? 0 : this.volume, this.ctx.currentTime, 0.05);
         }
+        if (this.isMuted && window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
         return this.isMuted;
+    }
+
+    speakSpell(spellName) {
+        if (this.isMuted || !this.volume || !window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(spellName);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.82;
+        utterance.pitch = 1;
+        utterance.volume = this.volume;
+        window.speechSynthesis.speak(utterance);
     }
 
     // Helper: create white noise buffer
