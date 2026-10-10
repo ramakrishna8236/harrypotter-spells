@@ -74,6 +74,14 @@ All sound effects are 100% procedurally synthesized in real time using the brows
 
 ---
 
+## 🌐 Play Online
+
+The game is published on GitHub Pages: https://ramakrishna8236.github.io/harrypotter-spells/
+
+Changes pushed to the `master` branch are deployed automatically. You can still run it locally using the options below.
+
+---
+
 ## 🚀 How to Run the Game
 
 ### Method 1: One-Click Windows Launcher
